@@ -44,6 +44,9 @@
     <Compile Include="Expression.cs" />
     <Compile Include="FunctionField.cs" />
     <Compile Include="FunctionType.cs" />
+    <Compile Include="Geometry2D\Hex\HexInfo.cs" />
+    <Compile Include="Geometry2D\Hex\HexPoint.cs" />
+    <Compile Include="Geometry2D\Vector.cs" />
     <Compile Include="KeyedList.cs" />
     <Compile Include="NeaReader.cs" />
     <Compile Include="NeaStreamReader.cs" />
