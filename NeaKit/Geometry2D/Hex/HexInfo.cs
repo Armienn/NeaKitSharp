@@ -183,24 +183,24 @@ namespace NeaKit.Geometry2D.Hex {
 
 		public static HorHexDirection HorDirectionFromString(String d) {
 			switch (d.ToUpper()) {
-				case "W":
-				case "WEST":
-					return HorHexDirection.West;
-				case "NW":
-				case "NORTHWEST":
-					return HorHexDirection.NorthWest;
-				case "NE":
-				case "NORTHEAST":
-					return HorHexDirection.NorthEast;
 				case "E":
 				case "EAST":
 					return HorHexDirection.East;
-				case "SE":
-				case "SOUTHEAST":
-					return HorHexDirection.SouthEast;
+				case "NE":
+				case "NORTHEAST":
+					return HorHexDirection.NorthEast;
+				case "NW":
+				case "NORTHWEST":
+					return HorHexDirection.NorthWest;
+				case "W":
+				case "WEST":
+					return HorHexDirection.West;
 				case "SW":
 				case "SOUTHWEST":
 					return HorHexDirection.SouthWest;
+				case "SE":
+				case "SOUTHEAST":
+					return HorHexDirection.SouthEast;
 				default:
 					throw new FormatException("No such direction.");
 			}
@@ -208,18 +208,18 @@ namespace NeaKit.Geometry2D.Hex {
 
 		public static String HorDirectionToString(HorHexDirection d, bool simple = false) {
 			switch (d) {
-				case HorHexDirection.West:
-					return simple ? "W" : "West";
-				case HorHexDirection.NorthWest:
-					return simple ? "NW" : "NorthWest";
-				case HorHexDirection.NorthEast:
-					return simple ? "NE" : "NorthEast";
 				case HorHexDirection.East:
 					return simple ? "E" : "East";
-				case HorHexDirection.SouthEast:
-					return simple ? "SE" : "SouthEast";
+				case HorHexDirection.NorthEast:
+					return simple ? "NE" : "NorthEast";
+				case HorHexDirection.NorthWest:
+					return simple ? "NW" : "NorthWest";
+				case HorHexDirection.West:
+					return simple ? "W" : "West";
 				case HorHexDirection.SouthWest:
 					return simple ? "SW" : "SouthWest";
+				case HorHexDirection.SouthEast:
+					return simple ? "SE" : "SouthEast";
 				default:
 					throw new FormatException("No such direction.");
 			}
