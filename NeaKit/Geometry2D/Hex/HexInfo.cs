@@ -5,6 +5,8 @@ using System.Text;
 
 namespace NeaKit.Geometry2D.Hex {
 	public abstract class HexInfo {
+
+		#region Directions
 		public static readonly Vector UnitHorE = new Vector(1, 0);
 		public static readonly Vector UnitHorNE = new Vector((float)0.5, (float)0.86602540378);
 		public static readonly Vector UnitHorNW = new Vector((float)-0.5, (float)0.86602540378);
@@ -283,6 +285,53 @@ namespace NeaKit.Geometry2D.Hex {
 				default:
 					throw new FormatException("No such direction.");
 			}
+		}
+
+		#endregion Directions
+
+		private static readonly double sqrt3 = Math.Sqrt(3);
+
+		/// <summary>
+		/// Calculates the HexPoint that an x,y position corresponds to. Assumes that the
+		/// coordinate system starts in the upper left corner of the rectangle that can be
+		/// drawn around the upper left hexagon in the grid. The x position increases to the
+		/// right, and the y position increases downwards.
+		/// </summary>
+		/// <param name="sidelength">The length of each side of the hexagons</param>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <returns></returns>
+		public static HexPoint HorHexPointFromCoordinates(double sidelength, double x, double y) {
+			HexPoint point = new HexPoint(0, 0);
+			//first move y within the bounds of the first line of hexagons
+			while (y < 0) {
+				y += 1.5 * sidelength;
+				x += sqrt3 / 2.0 * sidelength;
+				point.Y--;
+			}
+			while (y > 1.5 * sidelength) {
+				y -= 1.5 * sidelength;
+				x -= sqrt3 / 2.0 * sidelength;
+				point.Y++;
+			}
+			//move x within the bounds of the first hexagon
+			while (x < 0) {
+				x += sqrt3 * sidelength;
+				point.X--;
+			}
+			while (x > sqrt3 * sidelength) {
+				x -= sqrt3 * sidelength;
+				point.X++;
+			}
+			//check whether it belongs to one of the hexagons above
+			if (y < 0.5 * sidelength) {
+				if ( y > (1.0 / sqrt3) * (x > sqrt3 / 2.0 * sidelength ? -(x - sqrt3 * sidelength) : x ) ) {
+					point.Y--;
+					if(x > sqrt3 / 2.0 * sidelength)
+						point.X++;
+				}
+			}
+			return point;
 		}
 	}
 
