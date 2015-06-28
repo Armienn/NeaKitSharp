@@ -78,7 +78,23 @@ namespace NeaKit.Geometry2D.Hex {
 		}
 
 		public static VerHexDirection VerDirectionFromAngle(double angle) {
-			throw new NotImplementedException();
+			while (angle > Math.PI)
+				angle -= Math.PI * 2;
+			while (angle <= -Math.PI)
+				angle += Math.PI * 2;
+			if (angle > Math.PI * (2.0 / 3.0))
+				return VerHexDirection.NorthWest;
+			if (angle > Math.PI * (1.0 / 3.0))
+				return VerHexDirection.North;
+			if (angle > 0 )
+				return VerHexDirection.NorthEast;
+			if (angle > -Math.PI * (1.0 / 3.0))
+				return VerHexDirection.SouthEast;
+			if (angle > -Math.PI * (2.0 / 3.0))
+				return VerHexDirection.South;
+			if (angle > -Math.PI )
+				return VerHexDirection.SouthWest;
+			return VerHexDirection.NorthWest;
 		}
 
 		public static void AdjacentPosition(HorHexDirection dir, ref HexPoint position) {
@@ -226,11 +242,47 @@ namespace NeaKit.Geometry2D.Hex {
 		}
 
 		public static VerHexDirection VerDirectionFromString(String d) {
-			throw new NotImplementedException();
+			switch (d.ToUpper()) {
+				case "NE":
+				case "NORTHEAST":
+					return VerHexDirection.NorthEast;
+				case "N":
+				case "NORTH":
+					return VerHexDirection.North;
+				case "NW":
+				case "NORTHWEST":
+					return VerHexDirection.NorthWest;
+				case "SW":
+				case "SOUTHWEST":
+					return VerHexDirection.SouthWest;
+				case "S":
+				case "SOUTH":
+					return VerHexDirection.South;
+				case "SE":
+				case "SOUTHEAST":
+					return VerHexDirection.SouthEast;
+				default:
+					throw new FormatException("No such direction.");
+			}
 		}
 
 		public static String VerDirectionToString(VerHexDirection d, bool simple = false) {
-			throw new NotImplementedException();
+			switch (d) {
+				case VerHexDirection.NorthEast:
+					return simple ? "N" : "NorthEast";
+				case VerHexDirection.North:
+					return simple ? "N" : "North";
+				case VerHexDirection.NorthWest:
+					return simple ? "NW" : "NorthWest";
+				case VerHexDirection.SouthWest:
+					return simple ? "SW" : "SouthWest";
+				case VerHexDirection.South:
+					return simple ? "S" : "South";
+				case VerHexDirection.SouthEast:
+					return simple ? "SE" : "SouthEast";
+				default:
+					throw new FormatException("No such direction.");
+			}
 		}
 	}
 
