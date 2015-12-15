@@ -94,6 +94,16 @@ namespace NeaKit
 		}
 
 		/// <summary>
+		/// Returns true if the NeaReader has reached the end of the stream/string.
+		/// </summary>
+		/// <returns></returns>
+		public bool IsAtEnd() {
+			if (Peek() == -1)
+				return true;
+			else return false;
+		}
+
+		/// <summary>
 		/// Skips the next whitespace characters in the stream, if any.
 		/// </summary>
 		public void SkipWhiteSpace() {
