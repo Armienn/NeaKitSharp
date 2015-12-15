@@ -630,5 +630,9 @@ namespace NeaKit
 		}
 
 		#endregion
+
+		public void Dispose() {
+			Close();
+		}
 	}
 }

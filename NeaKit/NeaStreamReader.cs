@@ -134,5 +134,9 @@ namespace NeaKit
 				textHolder = "";
 			}
 		}
+
+		public void Dispose() {
+			Close();
+		}
 	}
 }
