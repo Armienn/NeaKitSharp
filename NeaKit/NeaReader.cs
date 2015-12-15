@@ -11,7 +11,7 @@ namespace NeaKit
 	/// A custom Reader class. It can read from either a StreamReader object, a 
 	/// NeaStreamReader object or a String.
 	/// </summary>
-	public class NeaReader
+	public class NeaReader : IDisposable
 	{
 		String buffer;
 		int pos = 0;

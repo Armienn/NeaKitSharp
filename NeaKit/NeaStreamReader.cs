@@ -11,7 +11,7 @@ namespace NeaKit
 	/// A custom version the StreamReader class. It is able to read both from a
 	/// StreamReader object, as well as from a String.
 	/// </summary>
-	public class NeaStreamReader
+	public class NeaStreamReader : IDisposable
 	{
 		readonly bool isStream;
 		StreamReader streamHolder;
