@@ -9,7 +9,7 @@ namespace NeaKit
 	/// A simple implementation of sound representation (compared to the Language/Sound one).
 	/// Initiation is assumed to be pulmonic and airstream is assumed to be egressive.
 	/// </summary>
-	public struct Sound
+	public struct Sound : IEquatable<Sound>
 	{
 		public ArticulationPoint Point;
 		public ArticulationManner Manner;
@@ -17,6 +17,22 @@ namespace NeaKit
 		public bool Rounded;
 		public bool Nasal;
 		public Voice Voice;
+
+		public Sound(
+			ArticulationPoint point = ArticulationPoint.DorsalPalatal,
+			ArticulationManner manner = ArticulationManner.Open,
+			TongueShape shape = TongueShape.Central,
+			bool rounded = false,
+			bool nasal = false,
+			Voice voice = Voice.Modal)
+		{
+			Point = point;
+			Manner = manner;
+			Shape = shape;
+			Rounded = rounded;
+			Nasal = nasal;
+			Voice = voice;
+		}
 
 		public static Sound GetRandom()
 		{
@@ -55,9 +71,37 @@ namespace NeaKit
 					}
 				}
 
+				if (Voice == Voice.Voiceless)
+				{
+					//this isn't really invalid, just very unusual
+					switch (Manner)
+					{
+						case ArticulationManner.Close:
+						case ArticulationManner.NearClose:
+						case ArticulationManner.CloseMid:
+						case ArticulationManner.Mid:
+						case ArticulationManner.OpenMid:
+						case ArticulationManner.NearOpen:
+						case ArticulationManner.Open:
+							return false;
+					}
+				}
+
+				if (Voice == Voice.Aspirated)
+				{
+					switch (Manner)
+					{
+						case ArticulationManner.Stop:
+							break;
+						default:
+							return false;
+					}
+				}
+
 				if (Manner == ArticulationManner.Closed && !Nasal) return false;
 
-				switch(Point){
+				switch (Point)
+				{
 					case ArticulationPoint.LabialLabial:
 						switch (Manner)
 						{
@@ -395,20 +439,20 @@ namespace NeaKit
 			enc += 16 * (int)Manner;
 			enc += 16 * 13 * (int)Shape;
 			enc += 16 * 13 * 3 * (int)Voice;
-			enc += 16 * 13 * 3 * 4 * (Rounded ? 1 : 0);
-			enc += 16 * 13 * 3 * 4 * 2 * (Nasal ? 1 : 0);
+			enc += 16 * 13 * 3 * 5 * (Rounded ? 1 : 0);
+			enc += 16 * 13 * 3 * 5 * 2 * (Nasal ? 1 : 0);
 			return enc;
 		}
 
 		public static Sound Decode(int enc)
 		{
 			Sound sound = new Sound();
-			int res = enc / (16 * 13 * 3 * 4 * 2);
+			int res = enc / (16 * 13 * 3 * 5 * 2);
 			sound.Nasal = res == 1;
-			enc -= res * (16 * 13 * 3 * 4 * 2);
-			res = enc / (16 * 13 * 3 * 4);
+			enc -= res * (16 * 13 * 3 * 5 * 2);
+			res = enc / (16 * 13 * 3 * 5);
 			sound.Rounded = res == 1;
-			enc -= res * (16 * 13 * 3 * 4);
+			enc -= res * (16 * 13 * 3 * 5);
 			res = enc / (16 * 13 * 3);
 			sound.Voice = (Voice)res;
 			enc -= res * (16 * 13 * 3);
@@ -420,6 +464,11 @@ namespace NeaKit
 			enc -= res * 16;
 			sound.Point = (ArticulationPoint)enc;
 			return sound;
+		}
+
+		public bool Equals(Sound other)
+		{
+			return Point == other.Point && Manner == other.Manner && Shape == other.Shape && Rounded == other.Rounded && Nasal == other.Nasal && Voice == other.Voice;
 		}
 	}
 
@@ -444,6 +493,6 @@ namespace NeaKit
 
 	public enum Voice
 	{
-		Voiceless, Breathy, Modal, Creaky
+		Aspirated, Voiceless, Breathy, Modal, Creaky //the first one is only for stops
 	}
 }
