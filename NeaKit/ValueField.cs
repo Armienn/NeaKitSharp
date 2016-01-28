@@ -168,6 +168,7 @@ namespace NeaKit
 		public ValueField(String key, params ValueField[] fields) {
 			Key = key;
 			values = new KeyedList<ValueField>();
+			if (fields == null) return;
 			foreach (ValueField v in fields) {
 				values.Add(v);
 			}
@@ -276,6 +277,11 @@ namespace NeaKit
 				list.Add("]");
 				return list.ToArray();
 			}
+		}
+
+		public bool Contains(string key)
+		{
+			return values == null ? false : values.Contains(key);
 		}
 
 		public IEnumerator GetEnumerator() {

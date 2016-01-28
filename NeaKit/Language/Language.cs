@@ -58,6 +58,44 @@ namespace NeaKit
 			return Word.Random(this, syllables, new Random());
 		}
 
+		public string Save()
+		{
+			ValueField erryding = new ValueField("Language", null);
+			foreach (SoundInformation si in Sounds)
+				erryding.Add(si.ToValueField());
+			foreach (SyllablePattern sp in Patterns)
+				erryding.Add(sp.ToValueField());
+			return erryding.Save();
+		}
+
+		public void Save(string file)
+		{
+			System.IO.StreamWriter writer = new System.IO.StreamWriter(file);
+			writer.Write(Save());
+			writer.Close();
+		}
+
+		public void Load(string file)
+		{
+			NeaReader reader = new NeaReader(new System.IO.StreamReader(file));
+			ValueField vf = new ValueField(reader);
+			foreach(ValueField v in vf){
+				if (v.Key == "SoundInformation")
+				{
+					SoundInformation info = new SoundInformation();
+					info.Load(v);
+					Sounds.Add(info);
+				}
+				else if (v.Key == "SyllablePattern")
+				{
+					SyllablePattern pattern = new SyllablePattern();
+					pattern.Load(v);
+					Patterns.Add(pattern);
+				}
+			}
+			reader.Close();
+		}
+
 		public static Language GetDansk()
 		{
 			Language language = new Language();
@@ -362,17 +400,6 @@ namespace NeaKit
 					ArticulationManner.Open
 				}));
 			language.Patterns.Add(pattern);
-			/*/ all consonants can be onset, regardless of nucleus or coda //no, dh and ng can't...
-			pattern = new SyllablePattern();
-			pattern.OnsetPatterns = new List<SoundPattern>();
-			pattern.OnsetPatterns.Add(new SoundPattern(
-				manners: new ArticulationManner[]{
-					ArticulationManner.Closed,
-					ArticulationManner.Stop,
-					ArticulationManner.Fricative,
-					ArticulationManner.Approximant
-				}));
-			language.Patterns.Add(pattern);*/
 			// all stops and fricatives can be onset
 			pattern = new SyllablePattern();
 			pattern.OnsetPatterns = new List<SoundPattern>();
@@ -393,19 +420,6 @@ namespace NeaKit
 					ArticulationPoint.LabialLabial,
 					ArticulationPoint.CoronalAlveolar
 				}));
-			// v, j and r can be onset
-			pattern = new SyllablePattern();
-			pattern.OnsetPatterns = new List<SoundPattern>();
-			pattern.OnsetPatterns.Add(new SoundPattern(
-				manners: new ArticulationManner[]{
-					ArticulationManner.Approximant
-				},
-				points: new ArticulationPoint[]{
-					ArticulationPoint.LabialDental,
-					ArticulationPoint.DorsalPalatal,
-					ArticulationPoint.DorsalUvular
-				}));
-			language.Patterns.Add(pattern);
 			// v, j and r can be onset
 			pattern = new SyllablePattern();
 			pattern.OnsetPatterns = new List<SoundPattern>();
@@ -496,5 +510,21 @@ namespace NeaKit
 	{
 		public Sound Sound;
 		public String Representation;
+
+		public void Load(String source)
+		{
+			Load(new ValueField(source));
+		}
+
+		public void Load(ValueField source)
+		{
+			Representation = source["Representation"].Value;
+			Sound.Load(source["Sound"]);
+		}
+
+		public ValueField ToValueField()
+		{
+			return new ValueField("SoundInformation", new ValueField("Representation", Representation), Sound.ToValueField());
+		}
 	}
 }

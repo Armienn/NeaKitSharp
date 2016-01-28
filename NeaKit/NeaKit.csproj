@@ -53,6 +53,7 @@
     <Compile Include="Language\SyllablePattern.cs" />
     <Compile Include="NeaReader.cs" />
     <Compile Include="NeaStreamReader.cs" />
+    <Compile Include="NeaUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Language\Sound.cs" />
     <Compile Include="Language\Syllable.cs" />

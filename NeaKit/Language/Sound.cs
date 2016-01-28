@@ -466,6 +466,37 @@ namespace NeaKit
 			return sound;
 		}
 
+		public string Save()
+		{
+			return ToValueField().Save();
+		}
+
+		public ValueField ToValueField()
+		{
+			return new ValueField("Sound",
+				new ValueField("Point", Point.ToString()),
+				new ValueField("Manner", Manner.ToString()),
+				new ValueField("Shape", Shape.ToString()),
+				new ValueField("Rounded", Rounded.ToString()),
+				new ValueField("Nasal", Nasal.ToString()),
+				new ValueField("Voice", Voice.ToString()));
+		}
+
+		public void Load(string source)
+		{
+			Load(new ValueField(source));
+		}
+
+		public void Load(ValueField vf)
+		{
+			Point = NeaUtility.ParseEnum<ArticulationPoint>(vf["Point"].Value);
+			Manner = NeaUtility.ParseEnum<ArticulationManner>(vf["Manner"].Value);
+			Shape = NeaUtility.ParseEnum<TongueShape>(vf["Shape"].Value);
+			Rounded = NeaReader.ParseBoolean(vf["Rounded"].Value);
+			Nasal = NeaReader.ParseBoolean(vf["Nasal"].Value);
+			Voice = NeaUtility.ParseEnum<Voice>(vf["Voice"].Value);
+		}
+
 		public bool Equals(Sound other)
 		{
 			return Point == other.Point && Manner == other.Manner && Shape == other.Shape && Rounded == other.Rounded && Nasal == other.Nasal && Voice == other.Voice;
